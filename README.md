@@ -1,8 +1,14 @@
+# Shop-Apotheke-App
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+This project is a Frontend / Backend Code Challange. The project is to implement a small client application for discovering trending repositories on GitHub.
+A list of the most popular repositories of the last week should be displayed and the user should be able to star them. The starred repositories should be visible either through a filter or in a diferent tab. Some basic info about the repo should be displayed, such as: repo name, link to GitHub, description and number of stars. 
+To keep things simple, the starring won’t be sent back to GitHub’s servers but just stored in localStorage.
 
-First, run the development server:
+## Runing the application 
+
+Run the development server:
 
 ```bash
 npm run dev
@@ -10,13 +16,21 @@ npm run dev
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) and try it .
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+## API 
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Can be accessed on [http://localhost:3000/api/search](http://localhost:3000/api/search). This endpoint can be edited in `pages/api/search.js`.
+
+The endpoint that provides 
+ * A list of the most popular repositories, sorted by number of stars.
+ * An option to be able to view the top 10, 50, 100 repositories should be available.
+ * Given a date, the most popular repositories created from this date onwards should be returned.
+ * A filter for the programming language would be a great addition to have.
+
+The end point map the https://api.github.com/search/repositories read more about it https://docs.github.com/en/rest/reference/search
+
 
 ## Learn More
 
