@@ -1,7 +1,5 @@
 # Shop-Apotheke-App
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
 This project is a Frontend / Backend Code Challange. The project is to implement a small client application for discovering trending repositories on GitHub.
 A list of the most popular repositories of the last week should be displayed and the user should be able to star them. The starred repositories should be visible either through a filter or in a diferent tab. Some basic info about the repo should be displayed, such as: repo name, link to GitHub, description and number of stars. 
 To keep things simple, the starring won’t be sent back to GitHub’s servers but just stored in localStorage.
