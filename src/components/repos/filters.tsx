@@ -44,6 +44,8 @@ function RepoFilters() {
 				value={language}
 				options={languages}
 				onChange={filterLanguage}
+				className={styles.input}
+				placeholder="Language"
 			/>
 
 			<Select
@@ -51,6 +53,8 @@ function RepoFilters() {
 				value={propage}
 				options={propages}
 				onChange={filterPerPage}
+				className={styles.input}
+				placeholder="Result Per Page"
 			/>
 		</section>
 	)

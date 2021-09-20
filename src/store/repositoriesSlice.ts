@@ -103,6 +103,7 @@ export const changePerPage =
 		(dispatch, getState) => {
 
 			dispatch(setPrePage(perPage))
+			dispatch(setPage(1))
 
 			const repos = selectRepos(getState())
 			

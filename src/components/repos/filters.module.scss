@@ -1,0 +1,10 @@
+.control {
+    display: flex;
+    width: 100%;
+    flex-direction: row-reverse;
+
+    .input{
+        min-width: 200px;
+        margin: 0 5px;
+    }
+}
