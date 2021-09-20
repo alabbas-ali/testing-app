@@ -2,11 +2,11 @@ import moment from "moment"
 import { RepoPage } from "../models/repo.page"
 
 export interface QueryParams {
-	q: string
-	sort?: string
-	order?: string
-	proPage: number
-	page: number
+	q: string | string[]
+	sort?: string | string[]
+	order?: string | string[]
+	proPage: number | string | string[]
+	page: number | string | string[]
 }
 
 //https://api.github.com/search/repositories?q=created:>2017-01-10&sort=stars&order=desc

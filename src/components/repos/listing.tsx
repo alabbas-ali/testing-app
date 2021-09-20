@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ReactPaginate from 'react-paginate'
 import RepoItem from './item'
@@ -31,7 +31,7 @@ function RepoListing() {
 			}
 		</section>
 
-		<section className={styles.section}>
+		<section>
 			<ReactPaginate 
 				pageCount={
 					// it is only the first 1000 search results are available feo github

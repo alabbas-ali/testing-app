@@ -6,7 +6,7 @@ import {
 	GetServerSidePropsContext,
 	NextPage,
 } from 'next'
-import RepositoriesService from '../service/RepositoriesService'
+import RepositoriesService, { QueryParams } from '../service/RepositoriesService'
 import { setReposAsync } from '../store/repositoriesSlice'
 
 interface IServerProps {
@@ -26,7 +26,15 @@ export default IndexPage
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext<any>) => {
 
-	const repos = await RepositoriesService.getAllRepos(context.query)
+	const query: QueryParams = {
+		q: context.query.q,
+		sort: context.query.sort,
+		order: context.query.order,
+		proPage: context.query.proPage,
+		page: context.query.page,
+	}
+	
+	const repos = await RepositoriesService.getAllRepos(query)
 
 	return {
 		props: {

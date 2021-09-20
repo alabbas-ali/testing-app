@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
 import moment from 'moment'
 import { AppThunk, RootState } from '.'
+import { Repository } from '../models/repo'
 import { RepoPage } from "../models/repo.page"
 import RepositoriesService, { QueryParams } from "../service/RepositoriesService"
 
@@ -12,6 +13,7 @@ export interface ReposState {
 	sort: string,
 	search: string
 	loading: boolean
+	stared: Array<Repository>
 	error: any
 }
 
@@ -23,6 +25,7 @@ export const initialState: ReposState = {
 	sort: 'stars',
 	search: `created:>${moment().subtract(1, 'week').format('YYYY-MM-DD')}`,
 	loading: true,
+	stared: [],
 	error: null
 }
 
@@ -51,6 +54,17 @@ const repositoriesSlice = createSlice({
 		setlanguage: (state: ReposState, action: PayloadAction<string>) => {
 			state.search = `created:>${moment().subtract(1, 'week').format('YYYY-MM-DD')}+language=${action.payload}`
 		},
+		setStared: (state: ReposState, action: PayloadAction<Array<Repository>>) => {
+			state.stared = action.payload
+		},
+		star: (state: ReposState, action: PayloadAction<Repository>) => {
+			state.stared.push(action.payload)
+			localStorage.setItem('stared', JSON.stringify(state.stared))
+		},
+		unstar: (state: ReposState, action: PayloadAction<Repository>) => {
+			state.stared = state.stared.filter( repo => repo.id != action.payload.id )
+			localStorage.setItem('stared', JSON.stringify(state.stared))
+		},
 	},
 	extraReducers: builder => {
 		builder.addCase(getRepos.pending, (state, _) => {
@@ -64,14 +78,24 @@ const repositoriesSlice = createSlice({
 	}
 })
 
-export const { setRepos, setPage, setPrePage, setlanguage } = repositoriesSlice.actions
+export const { 
+	setRepos, 
+	setPage, 
+	setPrePage, 
+	setlanguage,
+	setStared,
+	star,
+	unstar,
+} = repositoriesSlice.actions
 
 // List of selectors
 export const selectRepos = (state: RootState) => state.repos
 
-export const selectLanguage = (state: RootState) => state.repos.search.substr(30, state.repos.search.length)
+export const selectLanguage = (state: RootState) => state.repos.search.substr(29, state.repos.search.length)
 
 export const selectProPage = (state: RootState) => state.repos.proPage
+
+export const selectStared = (state: RootState) => state.repos.stared
 
 export const setReposAsync = (repos: RepoPage): AppThunk => dispatch => {
 	setTimeout(() => {

@@ -39,19 +39,22 @@ function RepoFilters() {
 
 	return (
 		<section className={styles.control}>
+
 			<Select
 				id="langauge-select-input"
-				value={language}
+				value={languages.filter(l => l.value === language)}
 				options={languages}
 				onChange={filterLanguage}
+				defaultValue={languages[0]}
 				className={styles.input}
 				placeholder="Language"
 			/>
 
 			<Select
 				id="prepage-select-input"
-				value={propage}
+				value={propages.filter(p => p.value === propage)}
 				options={propages}
+				defaultValue={propages[0]}
 				onChange={filterPerPage}
 				className={styles.input}
 				placeholder="Result Per Page"
