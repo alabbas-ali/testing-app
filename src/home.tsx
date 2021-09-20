@@ -20,6 +20,7 @@ function home() {
 			<RepoListing />
 
 			<Footer />
+
 		</div>
 	</>)
 }

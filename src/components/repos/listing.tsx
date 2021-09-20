@@ -1,9 +1,9 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import ReactPaginate from 'react-paginate'
 import RepoItem from './item'
-import { 
-	loadExactRepositoriesPage, 
-	loadNewRepositoriesPage, 
+import {
+	loadRepositoriesPage, 
 	ReposState, 
 	selectRepos,
 } from '../../store/repositoriesSlice'
@@ -15,18 +15,10 @@ function RepoListing() {
 
 	const dispatch = useDispatch()
 
-	const nextPage = (): void => {
-		dispatch(loadNewRepositoriesPage(1))
-	}
-
-	const previousPage = (): void => {
-		dispatch(loadNewRepositoriesPage(-1))
-	}
-
 	const goToPage = (page): void => {
-		dispatch(loadExactRepositoriesPage(page))
+		dispatch(loadRepositoriesPage(page.selected + 1))
 	}
-
+	
 	return (<>
 		<section className={styles.section}>
 			{
@@ -40,36 +32,18 @@ function RepoListing() {
 		</section>
 
 		<section className={styles.section}>
-
-			<nav className={styles.pagination} role="navigation" aria-label="pagination">
-				<button
-					className={styles.button + styles.pagination_previous}
-					onClick={() => previousPage()}
-				>
-					Previous page
-				</button>
-				<button
-					className={styles.button + styles.pagination_next}
-					onClick={() => nextPage()}
-				>
-					Next page
-				</button>
-				<ul className={styles.pagination_list}>
-					{
-						// for (let index = 1; index < (repositores.result.total_count / repositores.resultsPerPage); index ++ ) {
-						// 	<button
-						// 		key={index}
-						// 		className={`button pagination-link ${this.props.state.currentPage === index + 1 ? "is-current" : ""}`}
-						// 		aria-label="Page 1"
-						// 		onClick={() => goToPage(index + 1)}
-						// 		aria-current="page"
-						// 	>
-						// 		{index + 1}
-						// 	</button>
-						// )
-					}
-				</ul>
-			</nav>
+			<ReactPaginate 
+				pageCount={
+					// it is only the first 1000 search results are available feo github
+					repositores?.result?.total_count > 1000 
+					? 1000 / repositores.proPage
+					: repositores?.result?.total_count / repositores.proPage
+				}
+				initialPage={repositores.page - 1}
+				onPageChange={goToPage}
+				containerClassName={styles.paginate}
+				activeClassName={styles.active}
+			></ReactPaginate>
 		</section>
 	</>)
 }

@@ -25,6 +25,7 @@ const IndexPage: NextPage = (props: IServerProps) => {
 export default IndexPage
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext<any>) => {
+
 	const repos = await RepositoriesService.getAllRepos(context.query)
 
 	return {

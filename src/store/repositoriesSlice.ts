@@ -2,13 +2,14 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
 import moment from 'moment'
 import { AppThunk, RootState } from '.'
 import { RepoPage } from "../models/repo.page"
-import RepositoriesService from "../service/RepositoriesService"
+import RepositoriesService, { QueryParams } from "../service/RepositoriesService"
 
 export interface ReposState {
 	result: RepoPage
 	page: number
 	proPage: number
-	language: string
+	order: string,
+	sort: string,
 	search: string
 	loading: boolean
 	error: any
@@ -18,8 +19,9 @@ export interface ReposState {
 export const initialState: ReposState = {
 	result: null,
 	page: 1,
-	proPage: 10,
-	language: null,
+	proPage: 20,
+	order: 'desc',
+	sort: 'stars',
 	search: `created:>${moment().subtract(1, 'week').format('YYYY-MM-DD')}`,
 	loading: true,
 	error: null
@@ -30,7 +32,7 @@ export const initialState: ReposState = {
 // will call the thunk with the `dispatch` function as the first argument. Async
 // code can then be executed and other actions can be dispatched. Thunks are
 // typically used to make async requests.
-export const getRepos = createAsyncThunk('repos/all', async (query) => {
+export const getRepos = createAsyncThunk('repos/all', async (query: QueryParams) => {
 	return await RepositoriesService.getAllRepos(query)
 })
 
@@ -38,38 +40,18 @@ const repositoriesSlice = createSlice({
 	name: 'repos',
 	initialState,
 	reducers: {
-		setRepos: (state, action: PayloadAction<RepoPage>) => {
+		setRepos: (state: ReposState, action: PayloadAction<RepoPage>) => {
 			state.result = action.payload
 		},
-
-		loadNewRepositoriesPage : (state, action: PayloadAction<number>) => {
-
+		setPage: (state: ReposState, action: PayloadAction<number>) => {
+			state.page = action.payload
 		},
-
-		loadExactRepositoriesPage : (state, action: PayloadAction<number>) => {
-
+		setPrePage: (state: ReposState, action: PayloadAction<number>) => {
+			state.proPage = action.payload
 		},
-
-		filterRepositoriesByLanguage: (state, action: PayloadAction<string>) => {
-
-		}
-
-		// onSearch: state => {
-		// 	const isMatched = (value: string) => value.toLowerCase().includes(state.searchText.toLowerCase())
-		// 	const filterRepos = (post: Repository) => { }
-		// 	state.isSearch = true
-		// 	if (state.searchText !== '') {
-		// 		const repos = state.repos
-		// 		const searchResults = state.repos.items.filter(filterRepos)
-		// 		state.searchResults = searchResults
-		// 		state.showingPost = findFirstPost(searchResults)
-
-		// 	} else {
-		// 		state.searchResults = []
-		// 		state.isSearch = false
-		// 		state.showingPost = findFirstPost(state.bloggerRepos.Repos)
-		// 	}
-		// }
+		setlanguage: (state: ReposState, action: PayloadAction<string>) => {
+			state.search = `created:>${moment().subtract(1, 'week').format('YYYY-MM-DD')}+language=${action.payload}`
+		},
 	},
 	extraReducers: builder => {
 		builder.addCase(getRepos.pending, (state, _) => {
@@ -83,41 +65,74 @@ const repositoriesSlice = createSlice({
 	}
 })
 
+export const { setRepos, setPage, setPrePage, setlanguage } = repositoriesSlice.actions
+
+// List of selectors
+export const selectRepos = (state: RootState) => state.repos
+
+
 export const setReposAsync = (repos: RepoPage): AppThunk => dispatch => {
 	setTimeout(() => {
 		dispatch(setRepos(repos))
 	})
 }
 
-export const {
-	setRepos, 
-	loadNewRepositoriesPage, 
-	loadExactRepositoriesPage, 
-	filterRepositoriesByLanguage,
-} = repositoriesSlice.actions
+export const loadRepositoriesPage =
+	(page: number): AppThunk =>
+		(dispatch, getState) => {
+			dispatch(setPage(page))
+
+			const repos = selectRepos(getState())
+			
+			const query: QueryParams = {
+				q: repos.search,
+				order: repos.order,
+				sort: repos.sort,
+				page: repos.page,
+				proPage: repos.proPage,
+			}
+			
+			dispatch(getRepos(query))
+		}
 
 
-// const onSearchAsync = (): AppThunk => dispatch => {
-// 	setTimeout(() => {
-// 		dispatch(onSearch())
-// 	}, 200)
-// }
+export const changePerPage =
+	(perPage: number): AppThunk =>
+		(dispatch, getState) => {
 
-// List of selectors
-export const selectRepos = (state: RootState) => state.repos
+			dispatch(setPrePage(perPage))
 
-// const selectShowingPost = (state: RootState) =>
-// 	state.blogRepos.showingPost
+			const repos = selectRepos(getState())
+			
+			const query: QueryParams = {
+				q: repos.search,
+				order: repos.order,
+				sort: repos.sort,
+				page: repos.page,
+				proPage: repos.proPage,
+			}
+			
+			dispatch(getRepos(query))
+		}
 
-// const selectShowingPostId = (state: RootState) =>
-// 	state.blogRepos?.showingPost?.id ?? 0
+export const filterRepositoriesByLanguage =
+	(language: string): AppThunk =>
+		(dispatch, getState) => {
 
-// const selectSearchText = (state: RootState) =>
-// 	state.blogRepos.searchText
+			dispatch(setlanguage(language))
 
-// const selectSelectedSearchOn = (state: RootState) =>
-// 	state.blogRepos.selectedSearchOn
-
+			const repos = selectRepos(getState())
+			
+			const query: QueryParams = {
+				q: repos.search,
+				order: repos.order,
+				sort: repos.sort,
+				page: repos.page,
+				proPage: repos.proPage,
+			}
+			
+			dispatch(getRepos(query))
+		}
 
 
 export default repositoriesSlice.reducer

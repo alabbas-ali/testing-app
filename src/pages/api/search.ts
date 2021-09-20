@@ -100,19 +100,18 @@ const testdata = {
  * @param res 
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-	// const { q, sort, order, numberOfRests, page} = req.query
-	// let url = "https://api.github.com/search/repositories?"
-	// if (q) url += `q=${q}`
-	// if (sort) url += `&sort=${sort}`
-	// if (order) url += `&order=${order}`
-	// if (numberOfRests) url += `&per_page=${numberOfRests}`
-	// if (page) url += `&page=${page}`
-	// const response = await fetch( url )
-	// const data = await response.json()
 
-	// console.log('server side url ', url)
+	const { q, sort, order, proPage, page} = req.query
 
-	// console.log('server side data ', data)
+	let url = "https://api.github.com/search/repositories?"
+	if (q) url += `q=${q}`
+	if (sort) url += `&sort=${sort}`
+	if (order) url += `&order=${order}`
+	if (proPage) url += `&per_page=${proPage}`
+	if (page) url += `&page=${page}`
 
-	res.status(200).json( testdata )
+	const response = await fetch(url)
+	const data = await response.json()
+
+	res.status(200).json( data )
 }

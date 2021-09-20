@@ -9,7 +9,7 @@ function RepoFilters() {
 
 	const languages = [
 		{ label: 'All', value: null },
-		{ label: 'TypeScript', value: 'ts' },
+		{ label: 'TypeScript', value: 'typescript' },
 		{ label: 'JavaScript', value: 'js' },
 		{ label: 'Java', value: 'java' },
 		{ label: 'Python', value: 'python' },
@@ -20,17 +20,18 @@ function RepoFilters() {
 
 	const dispatch = useDispatch()
 
-	const filterLanguage = (event: ChangeEvent<HTMLInputElement>): void => {
-		dispatch(filterRepositoriesByLanguage(event.target.value))
+	const filterLanguage = (event): void => {
+		dispatch(filterRepositoriesByLanguage(event.value))
 	}
 
 	return (
-		<div className={styles.control}>
+		<section className={styles.control}>
 			<Select
+				id="react-select-input"
 				options={languages}
 				onChange={filterLanguage}
 			/>
-		</div>
+		</section>
 	)
 }
 

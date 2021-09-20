@@ -1,8 +1,19 @@
 import moment from "moment"
+import { RepoPage } from "../models/repo.page"
+
+export interface QueryParams {
+	q: string
+	sort?: string
+	order?: string
+	proPage: number
+	page: number
+}
+
+//https://api.github.com/search/repositories?q=created:>2017-01-10&sort=stars&order=desc
 
 export default class RepositoriesService {
 
-	static async getAllRepos(query) {
+	static async getAllRepos(query: QueryParams): Promise<RepoPage> {
 
 		let url = 'http://localhost:3000/api/search?'
 
@@ -19,10 +30,14 @@ export default class RepositoriesService {
 			query.q = `created:>${lastweek}`
 		url += `q=${query.q}`
 
-		if (query.sort) url += `&sort=${query.sort}`
+		if (query.sort) url += `&sort=${query.sort}` 
+		else url += `&sort=stars`
 		if (query.order) url += `&order=${query.order}`
-		if (query.numberOfRests) url += `&numberOfRests=${query.numberOfRests}`
+		else url += `&order=desc`
+		if (query.proPage) url += `&proPage=${query.proPage}`
+		else url += `&numberOfRests=20`
 		if (query.page) url += `&page=${query.page}`
+		else url += `&page=1`
 
 		const response = await fetch( url )
 		const data = await response.json()
