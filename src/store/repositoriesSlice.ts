@@ -15,7 +15,6 @@ export interface ReposState {
 	error: any
 }
 
-//https://api.github.com/search/repositories?q=created:>2017-01-10&sort=stars&order=desc
 export const initialState: ReposState = {
 	result: null,
 	page: 1,
@@ -70,6 +69,9 @@ export const { setRepos, setPage, setPrePage, setlanguage } = repositoriesSlice.
 // List of selectors
 export const selectRepos = (state: RootState) => state.repos
 
+export const selectLanguage = (state: RootState) => state.repos.search.substr(30, state.repos.search.length)
+
+export const selectProPage = (state: RootState) => state.repos.proPage
 
 export const setReposAsync = (repos: RepoPage): AppThunk => dispatch => {
 	setTimeout(() => {

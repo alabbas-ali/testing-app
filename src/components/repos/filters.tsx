@@ -1,11 +1,14 @@
-import { ChangeEvent } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Select from 'react-select'
-import { filterRepositoriesByLanguage } from '../../store/repositoriesSlice'
+import { changePerPage, filterRepositoriesByLanguage, selectLanguage, selectProPage } from '../../store/repositoriesSlice'
 
 import styles from './filters.module.scss'
 
 function RepoFilters() {
+
+	const language: string = useSelector(selectLanguage)
+
+	const propage: number = useSelector(selectProPage)
 
 	const languages = [
 		{ label: 'All', value: null },
@@ -18,18 +21,36 @@ function RepoFilters() {
 		{ label: "Go", value: 'go' }
 	]
 
+	const propages = [
+		{ label: '10 pre page', value: 10 },
+		{ label: '50 pre page', value: 50 },
+		{ label: '100 pre page', value: 100 }
+	]
+
 	const dispatch = useDispatch()
 
 	const filterLanguage = (event): void => {
 		dispatch(filterRepositoriesByLanguage(event.value))
 	}
 
+	const filterPerPage = (event): void => {
+		dispatch(changePerPage(event.value))
+	}
+
 	return (
 		<section className={styles.control}>
 			<Select
-				id="react-select-input"
+				id="langauge-select-input"
+				value={language}
 				options={languages}
 				onChange={filterLanguage}
+			/>
+
+			<Select
+				id="prepage-select-input"
+				value={propage}
+				options={propages}
+				onChange={filterPerPage}
 			/>
 		</section>
 	)

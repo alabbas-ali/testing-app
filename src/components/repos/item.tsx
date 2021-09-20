@@ -10,7 +10,7 @@ function RepoItem(props: { repo:Repository}) {
 					{props.repo.full_name} ({props.repo.language})
 				</h2>
 			</a>
-			<button aria-label='star' />
+			<button aria-label='star' > Star </button>
 			<p>{props.repo.description}</p>
 		</div>
 	)
