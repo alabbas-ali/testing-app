@@ -7,18 +7,26 @@ import {
 	NextPage,
 } from 'next'
 import RepositoriesService, { QueryParams } from '../service/RepositoriesService'
-import { setReposAsync } from '../store/repositoriesSlice'
+import { setQueryParamsAsync, setReposAsync } from '../store/repositoriesSlice'
+import { RepoPage } from '../models/repo.page'
 
 interface IServerProps {
-	repos: any
+	repos: RepoPage
+	query: QueryParams
 	children?: ReactNode
 }
 
 const IndexPage: NextPage = (props: IServerProps) => {
 	const dispatch = useDispatch()
+
+	useEffect(() => {
+		dispatch(setQueryParamsAsync(props.query))
+	}, [dispatch, props.query])
+
 	useEffect(() => {
 		dispatch(setReposAsync(props.repos))
 	}, [dispatch, props.repos])
+
 	return (<App />)
 }
 
@@ -27,18 +35,19 @@ export default IndexPage
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext<any>) => {
 
 	const query: QueryParams = {
-		q: context.query.q,
-		sort: context.query.sort,
-		order: context.query.order,
-		proPage: context.query.proPage,
-		page: context.query.page,
+		q: context.query.q || null,
+		sort: context.query.sort || 'stars',
+		order: context.query.order || 'desc',
+		proPage: context.query.proPage || 20,
+		page: context.query.page || 1,
 	}
 	
 	const repos = await RepositoriesService.getAllRepos(query)
 
 	return {
 		props: {
-			repos
+			repos,
+			query,
 		},
 	}
 }

@@ -1,83 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
 import { NextApiRequest, NextApiResponse } from 'next'
-
-const testdata = {
-	total_count: 7,
-    incomplete_results: true,
-    items: [
-		{
-			id: 2345,
-			node_id: 'threadId',
-			name: 'test repo 1',
-			full_name: 'test repo 1',
-			private: false,
-			html_url: 'https://github/test',
-			description: 'test repo 1',
-			language: 'js',
-		},
-		{
-			id: 2345,
-			node_id: 'threadId',
-			name: 'test repo 1',
-			full_name: 'test repo 1',
-			private: false,
-			html_url: 'https://github/test',
-			description: 'test repo 1',
-			language: 'js',
-		},
-		{
-			id: 2345,
-			node_id: 'threadId',
-			name: 'test repo 1',
-			full_name: 'test repo 1',
-			private: false,
-			html_url: 'https://github/test',
-			description: 'test repo 1',
-			language: 'js',
-		},
-		{
-			id: 2345,
-			node_id: 'threadId',
-			name: 'test repo 1',
-			full_name: 'test repo 1',
-			private: false,
-			html_url: 'https://github/test',
-			description: 'test repo 1',
-			language: 'js',
-		},
-		{
-			id: 2345,
-			node_id: 'threadId',
-			name: 'test repo 1',
-			full_name: 'test repo 1',
-			private: false,
-			html_url: 'https://github/test',
-			description: 'test repo 1',
-			language: 'js',
-		},
-		{
-			id: 2345,
-			node_id: 'threadId',
-			name: 'test repo 1',
-			full_name: 'test repo 1',
-			private: false,
-			html_url: 'https://github/test',
-			description: 'test repo 1',
-			language: 'js',
-		},
-		{
-			id: 2345,
-			node_id: 'threadId',
-			name: 'test repo 1',
-			full_name: 'test repo 1',
-			private: false,
-			html_url: 'https://github/test',
-			description: 'test repo 1',
-			language: 'js',
-		}
-	]
-}
+import { RepoPage } from '../../models/repo.page'
 
 /**
  * This is the proxy endpoint that provides 
@@ -112,6 +36,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	const response = await fetch(url)
 	const data = await response.json()
-
-	res.status(200).json( data )
+	const remapedData: RepoPage = {
+		total_count: data.total_count,
+		incomplete_results: data.incomplete_results,
+		items: data.items.map(it => { return {
+			id: it.id,
+			node_id: it.node_id,
+			name: it.name,
+			full_name: it.full_name,
+			private: it.private,
+			html_url: it.html_url,
+			description: it.description,
+			language: it.language,
+		}})
+	}
+	res.status(200).json( remapedData )
 }

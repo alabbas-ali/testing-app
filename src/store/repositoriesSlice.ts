@@ -7,10 +7,10 @@ import RepositoriesService, { QueryParams } from "../service/RepositoriesService
 
 export interface ReposState {
 	result: RepoPage
-	page: number
-	proPage: number
-	order: string,
-	sort: string,
+	page: string 
+	proPage: string
+	order: string
+	sort: string
 	search: string
 	loading: boolean
 	stared: Array<Repository>
@@ -45,10 +45,10 @@ const repositoriesSlice = createSlice({
 		setRepos: (state: ReposState, action: PayloadAction<RepoPage>) => {
 			state.result = action.payload
 		},
-		setPage: (state: ReposState, action: PayloadAction<number>) => {
+		setPage: (state: ReposState, action: PayloadAction<string>) => {
 			state.page = action.payload
 		},
-		setPrePage: (state: ReposState, action: PayloadAction<number>) => {
+		setPrePage: (state: ReposState, action: PayloadAction<string>) => {
 			state.proPage = action.payload
 		},
 		setlanguage: (state: ReposState, action: PayloadAction<string>) => {
@@ -73,6 +73,18 @@ const repositoriesSlice = createSlice({
 			state.error = action.error
 		}).addCase(getRepos.fulfilled, (state, action) => {
 			state.loading = false
+			// Don't use window.history.pushState() here in production
+            // It's better to keep redirections predictable
+            window.history.pushState({
+					page: state.page,
+					proPage: state.proPage,
+					order: state.order,
+					sort: state.sort,
+					search: state.search,
+				}, 
+				"Trending Github Repositories", 
+				`?q=${state.search}&order=${state.order}&sort=${state.sort}&proPage=${state.proPage}&page=${state.page}`
+			)
 			state.result = action.payload
 		})
 	}
@@ -89,11 +101,15 @@ export const {
 } = repositoriesSlice.actions
 
 // List of selectors
-export const selectRepos = (state: RootState) => state.repos
+export const selectState = (state: RootState) => state.repos
+
+export const selectRepos = (state: RootState) => state.repos.result
 
 export const selectLanguage = (state: RootState) => state.repos.search.substr(29, state.repos.search.length)
 
 export const selectProPage = (state: RootState) => state.repos.proPage
+
+export const selectPage = (state: RootState) => state.repos.page
 
 export const selectStared = (state: RootState) => state.repos.stared
 
@@ -103,12 +119,20 @@ export const setReposAsync = (repos: RepoPage): AppThunk => dispatch => {
 	})
 }
 
+export const setQueryParamsAsync = (query: QueryParams): AppThunk => dispatch => {
+	setTimeout(() => {
+		dispatch(setPage((query.page as string)))
+		dispatch(setPrePage((query.proPage as string)))
+		dispatch(setlanguage((query.q as string).substr(29, (query.q as string).length)))
+	})
+}
+
 export const loadRepositoriesPage =
-	(page: number): AppThunk =>
+	(page: string): AppThunk =>
 		(dispatch, getState) => {
 			dispatch(setPage(page))
 
-			const repos = selectRepos(getState())
+			const repos = selectState(getState())
 			
 			const query: QueryParams = {
 				q: repos.search,
@@ -123,13 +147,13 @@ export const loadRepositoriesPage =
 
 
 export const changePerPage =
-	(perPage: number): AppThunk =>
+	(perPage: string): AppThunk =>
 		(dispatch, getState) => {
 
 			dispatch(setPrePage(perPage))
 			dispatch(setPage(1))
 
-			const repos = selectRepos(getState())
+			const repos = selectState(getState())
 			
 			const query: QueryParams = {
 				q: repos.search,
@@ -148,7 +172,7 @@ export const filterRepositoriesByLanguage =
 
 			dispatch(setlanguage(language))
 
-			const repos = selectRepos(getState())
+			const repos = selectState(getState())
 			
 			const query: QueryParams = {
 				q: repos.search,

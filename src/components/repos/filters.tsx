@@ -8,7 +8,7 @@ function RepoFilters() {
 
 	const language: string = useSelector(selectLanguage)
 
-	const propage: number = useSelector(selectProPage)
+	const proPage = useSelector(selectProPage)
 
 	const languages = [
 		{ label: 'All', value: null },
@@ -22,9 +22,9 @@ function RepoFilters() {
 	]
 
 	const propages = [
-		{ label: '10 pre page', value: 10 },
-		{ label: '50 pre page', value: 50 },
-		{ label: '100 pre page', value: 100 }
+		{ label: '10 pre page', value: '10' },
+		{ label: '50 pre page', value: '50' },
+		{ label: '100 pre page', value: '100' }
 	]
 
 	const dispatch = useDispatch()
@@ -52,7 +52,7 @@ function RepoFilters() {
 
 			<Select
 				id="prepage-select-input"
-				value={propages.filter(p => p.value === propage)}
+				value={propages.filter(p => p.value === proPage)}
 				options={propages}
 				defaultValue={propages[0]}
 				onChange={filterPerPage}
