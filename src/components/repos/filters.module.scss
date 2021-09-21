@@ -1,10 +1,39 @@
 .control {
-    display: flex;
+    // display: flex;
     width: 100%;
-    flex-direction: row-reverse;
+    // flex-direction: row-reverse;
 
-    .input{
-        min-width: 200px;
-        margin: 0 5px;
+    & .tabs {
+        display: inline-block;
+
+        a {
+            display: inline-block;
+            width: 100px;
+            height: 36px;
+            border-top: 1px solid hsl(0deg 0% 70%);
+            border-left: 1px solid hsl(0deg 0% 70%);
+            border-top-right-radius: 5px;
+            border-top-left-radius: 5px;
+            text-align: center;
+            padding: 8px;
+            &:hover {
+                border-bottom: 3px solid;
+            }
+
+            &.active {
+                background-color: rgba(101, 101, 196, 0.479);
+            }
+        }
+    }
+
+
+    & .filters {
+        display: flex;
+        float: right;
+
+        & .input{
+            min-width: 200px;
+            margin: 0 5px;
+        }
     }
 }

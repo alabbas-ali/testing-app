@@ -15,6 +15,7 @@ export interface ReposState {
 	loading: boolean
 	stared: Array<Repository>
 	error: any
+	showStared: boolean
 }
 
 export const initialState: ReposState = {
@@ -26,7 +27,8 @@ export const initialState: ReposState = {
 	search: `created:>${moment().subtract(1, 'week').format('YYYY-MM-DD')}`,
 	loading: true,
 	stared: [],
-	error: null
+	error: null,
+	showStared: false
 }
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -56,6 +58,9 @@ const repositoriesSlice = createSlice({
 				state.search = `created:>${moment().subtract(1, 'week').format('YYYY-MM-DD')}+language=${action.payload}`
 			else
 				state.search = `created:>${moment().subtract(1, 'week').format('YYYY-MM-DD')}`
+		},
+		setShowStared: (state: ReposState, action: PayloadAction<boolean>) => {
+			state.showStared = action.payload
 		},
 		setStared: (state: ReposState, action: PayloadAction<Array<Repository>>) => {
 			state.stared = action.payload
@@ -99,6 +104,7 @@ export const {
 	setPrePage, 
 	setlanguage,
 	setStared,
+	setShowStared,
 	star,
 	unstar,
 } = repositoriesSlice.actions
@@ -115,6 +121,8 @@ export const selectProPage = (state: RootState) => state.repos.proPage
 export const selectPage = (state: RootState) => state.repos.page
 
 export const selectStared = (state: RootState) => state.repos.stared
+
+export const selectShowStared = (state: RootState) => state.repos.showStared
 
 export const setReposAsync = (repos: RepoPage): AppThunk => dispatch => {
 	setTimeout(() => {
