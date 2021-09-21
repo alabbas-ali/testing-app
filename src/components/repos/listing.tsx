@@ -51,7 +51,7 @@ function RepoListing() {
 		</section>
 
 		<section>
-			{ showStared ? <ReactPaginate
+			{ !showStared ? <ReactPaginate
 					pageCount={
 						// it is only the first 1000 search results are available feo github
 						repositores?.total_count > 1000 

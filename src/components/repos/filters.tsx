@@ -73,7 +73,7 @@ function RepoFilters() {
 					defaultValue={languages[0]}
 					className={styles.input}
 					placeholder="Language"
-					disabled={showStared}
+					isDisabled={showStared}
 				/>
 
 				<Select
@@ -84,7 +84,7 @@ function RepoFilters() {
 					onChange={filterPerPage}
 					className={styles.input}
 					placeholder="Result Per Page"
-					disabled={showStared}
+					isDisabled={showStared}
 				/>
 			</div>
 		</section>
