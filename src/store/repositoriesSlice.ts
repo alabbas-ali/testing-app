@@ -19,8 +19,8 @@ export interface ReposState {
 
 export const initialState: ReposState = {
 	result: null,
-	page: 1,
-	proPage: 20,
+	page: '1',
+	proPage: '10',
 	order: 'desc',
 	sort: 'stars',
 	search: `created:>${moment().subtract(1, 'week').format('YYYY-MM-DD')}`,
@@ -52,7 +52,10 @@ const repositoriesSlice = createSlice({
 			state.proPage = action.payload
 		},
 		setlanguage: (state: ReposState, action: PayloadAction<string>) => {
-			state.search = `created:>${moment().subtract(1, 'week').format('YYYY-MM-DD')}+language=${action.payload}`
+			if (action.payload)
+				state.search = `created:>${moment().subtract(1, 'week').format('YYYY-MM-DD')}+language=${action.payload}`
+			else
+				state.search = `created:>${moment().subtract(1, 'week').format('YYYY-MM-DD')}`
 		},
 		setStared: (state: ReposState, action: PayloadAction<Array<Repository>>) => {
 			state.stared = action.payload
@@ -131,9 +134,7 @@ export const loadRepositoriesPage =
 	(page: string): AppThunk =>
 		(dispatch, getState) => {
 			dispatch(setPage(page))
-
 			const repos = selectState(getState())
-			
 			const query: QueryParams = {
 				q: repos.search,
 				order: repos.order,
@@ -149,10 +150,8 @@ export const loadRepositoriesPage =
 export const changePerPage =
 	(perPage: string): AppThunk =>
 		(dispatch, getState) => {
-
 			dispatch(setPrePage(perPage))
-			dispatch(setPage(1))
-
+			dispatch(setPage('1'))
 			const repos = selectState(getState())
 			
 			const query: QueryParams = {
@@ -169,9 +168,7 @@ export const changePerPage =
 export const filterRepositoriesByLanguage =
 	(language: string): AppThunk =>
 		(dispatch, getState) => {
-
 			dispatch(setlanguage(language))
-
 			const repos = selectState(getState())
 			
 			const query: QueryParams = {

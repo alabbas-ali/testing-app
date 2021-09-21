@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import Footer from './components/footer'
+import Footer from './components/footer/footer'
 import RepoFilters from './components/repos/filters'
 import RepoListing from './components/repos/listing'
 
