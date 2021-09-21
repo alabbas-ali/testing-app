@@ -4,6 +4,7 @@ import ReactPaginate from 'react-paginate'
 import RepoItem from './item'
 import {
 	loadRepositoriesPage,  
+	selectloading,  
 	selectPage, 
 	selectProPage, 
 	selectRepos,
@@ -21,6 +22,7 @@ function RepoListing() {
 	const showStared: boolean = useSelector(selectShowStared)
 	const proPage: string = useSelector(selectProPage)
 	const currentPage: string = useSelector(selectPage)
+	const isLoading: boolean = useSelector(selectloading)
 
 	const dispatch = useDispatch()
 
@@ -31,6 +33,17 @@ function RepoListing() {
 	
 	return (<>
 		<section className={styles.section}>
+			{
+				isLoading 
+				? <div className={styles.loading}> 
+					<div className={styles.loader}>
+						<div className={styles.loader_wheel}></div>
+						<div className={styles.loader_text}></div>
+					</div>
+				 </div> 
+				 : <></>
+			}
+
 			{
 				!showStared &&
 				repositores?.items &&

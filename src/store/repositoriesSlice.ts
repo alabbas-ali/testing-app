@@ -25,7 +25,7 @@ export const initialState: ReposState = {
 	order: 'desc',
 	sort: 'stars',
 	search: `created:>${moment().subtract(1, 'week').format('YYYY-MM-DD')}`,
-	loading: true,
+	loading: false,
 	stared: [],
 	error: null,
 	showStared: false
@@ -119,6 +119,8 @@ export const selectLanguage = (state: RootState) => state.repos.search.substr(29
 export const selectProPage = (state: RootState) => state.repos.proPage
 
 export const selectPage = (state: RootState) => state.repos.page
+
+export const selectloading = (state: RootState) => state.repos.loading
 
 export const selectStared = (state: RootState) => state.repos.stared
 
