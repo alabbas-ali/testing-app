@@ -1,86 +1,91 @@
 .section {
-    width: 100%;
-    position: relative;
+  width: 100%;
+  position: relative;
 }
 
 .loading {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: #e4d4d296;
-    z-index: 10;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    margin: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #e4d4d296;
+  z-index: 10;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin: 0;
 
-    & .loader {
-        width: 60px;
+  & .loader {
+    width: 60px;
 
-        & .loader_wheel {
-            animation: spin 1s infinite linear;
-            border: 3px solid rgb(216 18 18 / 75%);
-            border-left: 4px solid #fff;
-            border-radius: 50%;
-            height: 50px;
-            margin-bottom: 10px;
-            width: 50px;
-        }
-
-        & .loader_text {
-            color: #dc0b0b;
-            font-family: arial, sans-serif;
-            &:after {
-                content: "Loading";
-                animation: load 2s linear infinite;
-            }
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes load {
-            0% {
-                content: "Loading";
-            }
-            33% {
-                content: "Loading.";
-            }
-            67% {
-                content: "Loading..";
-            }
-            100% {
-                content: "Loading...";
-            }
-        }
+    & .loader_wheel {
+      animation: spin 1s infinite linear;
+      border: 3px solid rgb(216 18 18 / 75%);
+      border-left: 4px solid #ffffff;
+      border-radius: 50%;
+      height: 50px;
+      margin-bottom: 10px;
+      width: 50px;
     }
+
+    & .loader_text {
+      color: #dc0b0b;
+      font-family: "Arial", sans-serif;
+
+      &::after {
+        content: "Loading";
+        animation: load 2s linear infinite;
+      }
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    @keyframes load {
+      0% {
+        content: "Loading";
+      }
+
+      33% {
+        content: "Loading.";
+      }
+
+      67% {
+        content: "Loading..";
+      }
+
+      100% {
+        content: "Loading...";
+      }
+    }
+  }
 }
 
 .paginate {
-    display: inline-block;
-    padding-left: 15px;
-    padding-right: 15px;
-    li {
-        display: inline-block;
-        border: 1px solid #5c7ba9;
-        border-radius: 5px;
-        padding: 5px;
-        margin: 5px;
-        cursor: default;
+  display: inline-block;
+  padding-left: 15px;
+  padding-right: 15px;
 
-        &:hover {
-            background-color: aqua;
-        }
+  & li {
+    display: inline-block;
+    border: 1px solid #5c7ba9;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    cursor: default;
+
+    &:hover {
+      background-color: aqua;
     }
+  }
 }
 
 .active {
-    background-color: aqua;
-    color: blue;
+  background-color: aqua;
+  color: blue;
 }

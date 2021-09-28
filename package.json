@@ -6,7 +6,8 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"lint": "next lint"
+		"lint": "next lint",
+		"stylelint": "stylelint --config stylelint.config.js src --fix"
 	},
 	"dependencies": {
 		"@reduxjs/toolkit": "^1.6.1",
@@ -28,6 +29,8 @@
 		"eslint": "7.32.0",
 		"eslint-config-next": "11.1.2",
 		"sass": "^1.41.0",
+		"stylelint": "^13.12.0",
+		"stylelint-config-standard": "^21.0.0",
 		"typescript": "^4.4.3"
 	},
 	"browserslist": {

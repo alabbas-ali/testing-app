@@ -6,7 +6,7 @@
   text-decoration: none;
   border: 1px solid #eaeaea;
   border-radius: 10px;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition: color .15s ease, border-color .15s ease;
   width: calc(100% - 10px);
   position: relative;
 
@@ -38,7 +38,7 @@
     }
   }
 
-  .star{
+  & .star {
     position: absolute;
     right: 10px;
     top: 10px;
@@ -59,7 +59,7 @@
     }
   }
 
-  .unstar {
+  & .unstar {
     position: absolute;
     right: 10px;
     top: 10px;
