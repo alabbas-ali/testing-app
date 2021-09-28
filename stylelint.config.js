@@ -1,4 +1,4 @@
-var config = {
+module.exports = {
     'extends': 'stylelint-config-standard',
 
     rules: {
@@ -103,5 +103,3 @@ var config = {
         'value-no-vendor-prefix': true,
     }
 }
-
-module.exports = config

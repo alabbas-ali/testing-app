@@ -66,7 +66,7 @@ function RepoFilters() {
 
 			<div className={styles.filters}>
 				<Select
-					id="langauge-select-input"
+					instanceId="langauge-select-input"
 					value={languages.filter(l => l.value === language)}
 					options={languages}
 					onChange={filterLanguage}
@@ -77,7 +77,7 @@ function RepoFilters() {
 				/>
 
 				<Select
-					id="prepage-select-input"
+					instanceId="prepage-select-input"
 					value={propages.filter(p => p.value === proPage)}
 					options={propages}
 					defaultValue={propages[0]}
