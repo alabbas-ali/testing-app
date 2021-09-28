@@ -68,10 +68,10 @@ function RepoListing() {
 					pageCount={
 						// it is only the first 1000 search results are available feo github
 						repositores?.total_count > 1000 
-						? 1000 / proPage
-						: repositores?.total_count / proPage
+						? 1000 / parseInt(proPage)
+						: repositores?.total_count / parseInt(proPage)
 					}
-					initialPage={currentPage - 1}
+					initialPage={parseInt(currentPage) - 1}
 					onPageChange={goToPage}
 					containerClassName={styles.paginate}
 					activeClassName={styles.active}
