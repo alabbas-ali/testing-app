@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux'
 import Select from 'react-select'
-import { 
-	changePerPage, 
-	filterRepositoriesByLanguage, 
-	selectLanguage, 
-	selectProPage, 
-	selectShowStared, 
-	setShowStared 
+import {
+	changePerPage,
+	filterRepositoriesByLanguage,
+	selectLanguage,
+	selectProPage,
+	selectShowStared,
+	setShowStared,
 } from '../../store/repositoriesSlice'
 
 import styles from './filters.module.scss'
@@ -52,15 +52,15 @@ function RepoFilters() {
 		<section className={styles.control}>
 
 			<div className={styles.tabs}>
-				<a 
-					href="#" 
-					className={!showStared ? styles.active : null} 
-					onClick={() => changeDisplay(false)} 
+				<a
+					href="#"
+					className={!showStared ? styles.active : null}
+					onClick={() => changeDisplay(false)}
 				> Overview </a>
-				<a 
-					href="#" 
-					className={showStared ? styles.active : null} 
-					onClick={() => changeDisplay(true)} 
+				<a
+					href="#"
+					className={showStared ? styles.active : null}
+					onClick={() => changeDisplay(true)}
 				> Stared </a>
 			</div>
 

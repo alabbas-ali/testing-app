@@ -1,53 +1,72 @@
-import React, { ReactNode, useEffect } from 'react'
-import App from '../home'
+import moment from 'moment'
 import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import Head from 'next/head'
 import {
 	GetServerSideProps,
-	GetServerSidePropsContext,
 	NextPage,
 } from 'next'
-import RepositoriesService, { QueryParams } from '../service/RepositoriesService'
-import { setQueryParamsAsync, setReposAsync } from '../store/repositoriesSlice'
-import { RepoPage } from '../models/repo.page'
 
-interface IServerProps {
-	repos: RepoPage
-	query: QueryParams
-	children?: ReactNode
-}
+import {
+	setQueryParamsAsync,
+	setStared,
+} from '../store/repositoriesSlice'
 
-const IndexPage: NextPage = (props: IServerProps) => {
+import { QueryParams } from '../service/RepositoriesService'
+import { wrapper } from '../store'
+import RepoFilters from '../components/repos/filters'
+import RepoListing from '../components/repos/listing'
+import Footer from '../components/footer/footer'
+import styles from './home.module.scss'
+
+
+const ISSERVER = typeof window === "undefined"
+
+const IndexPage: NextPage = () => {
 	const dispatch = useDispatch()
 
+	// Similar to componentDidMount and componentDidUpdate:
 	useEffect(() => {
-		dispatch(setQueryParamsAsync(props.query))
-	}, [dispatch, props.query])
+		if (!ISSERVER) dispatch(setStared(JSON.parse(localStorage.getItem('stared')) || []))
+	})
 
-	useEffect(() => {
-		dispatch(setReposAsync(props.repos))
-	}, [dispatch, props.repos])
+	return (<>
+		<Head>
+			<title>Trending Github Repositories</title>
+			<meta name="description" content="discovering trending github repositories on GitHub" />
+			<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+			<link rel="icon" href="/favicon.ico" />
+		</Head>
+		<div className={styles.container}>
 
-	return (<App />)
+			<RepoFilters />
+
+			<RepoListing />
+
+			<Footer />
+
+		</div>
+	</>)
 }
 
 export default IndexPage
 
-export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext<any>) => {
+export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(
+	(store) => async (context) => {
 
-	const query: QueryParams = {
-		q: context.query.q || null,
-		sort: context.query.sort || 'stars',
-		order: context.query.order || 'desc',
-		proPage: context.query.proPage || 20,
-		page: context.query.page || 1,
-	}
-	
-	const repos = await RepositoriesService.getAllRepos(query)
+		const lastweek = moment().subtract(1, 'week').format('YYYY-MM-DD')
 
-	return {
-		props: {
-			repos,
-			query,
-		},
-	}
-}
+		const query: QueryParams = {
+			q: context.query.q || `+created:>${lastweek}`,
+			sort: context.query.sort || 'stars',
+			order: context.query.order || 'desc',
+			proPage: context.query.proPage || 20,
+			page: context.query.page || 1,
+		}
+
+		await store.dispatch(setQueryParamsAsync(query))
+
+		return {
+			props: {},
+		}
+	})

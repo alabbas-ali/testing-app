@@ -1,5 +1,6 @@
-import moment from "moment"
-import { RepoPage } from "../models/repo.page"
+import moment from 'moment'
+import { RepoPage } from '../models/repo.page'
+//import absoluteUrl from 'next-absolute-url'
 
 export interface QueryParams {
 	q: string | string[]
@@ -9,13 +10,13 @@ export interface QueryParams {
 	page: number | string | string[]
 }
 
-//https://api.github.com/search/repositories?q=created:>2017-01-10&sort=stars&order=desc
-
 export default class RepositoriesService {
+
+	//private absolute_url = absoluteUrl()
 
 	static async getAllRepos(query: QueryParams): Promise<RepoPage> {
 
-		let url = 'http://localhost:3000/api/search?'
+		let url = `http://localhost:3000/api/search?`
 
 		/**
 		 * checking if the query request include filter for data or not 
@@ -30,7 +31,7 @@ export default class RepositoriesService {
 			query.q = `created:>${lastweek}`
 		url += `q=${query.q}`
 
-		if (query.sort) url += `&sort=${query.sort}` 
+		if (query.sort) url += `&sort=${query.sort}`
 		else url += `&sort=stars`
 		if (query.order) url += `&order=${query.order}`
 		else url += `&order=desc`
@@ -39,7 +40,7 @@ export default class RepositoriesService {
 		if (query.page) url += `&page=${query.page}`
 		else url += `&page=1`
 
-		const response = await fetch( url )
+		const response = await fetch(url)
 		const data = await response.json()
 		return data
 	}

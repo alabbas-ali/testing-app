@@ -1,13 +1,18 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
+import {
+	createSlice,
+	PayloadAction,
+	createAsyncThunk,
+} from '@reduxjs/toolkit'
+import { HYDRATE } from 'next-redux-wrapper'
 import moment from 'moment'
-import { AppThunk, RootState } from '.'
 import { Repository } from '../models/repo'
 import { RepoPage } from "../models/repo.page"
 import RepositoriesService, { QueryParams } from "../service/RepositoriesService"
+import { AppThunk, RootState } from '.'
 
 export interface ReposState {
 	result: RepoPage
-	page: string 
+	page: string
 	proPage: string
 	order: string
 	sort: string
@@ -70,38 +75,45 @@ const repositoriesSlice = createSlice({
 			localStorage.setItem('stared', JSON.stringify(state.stared))
 		},
 		unstar: (state: ReposState, action: PayloadAction<Repository>) => {
-			state.stared = state.stared.filter( repo => repo.id != action.payload.id )
+			state.stared = state.stared.filter(repo => repo.id != action.payload.id)
 			localStorage.setItem('stared', JSON.stringify(state.stared))
 		},
 	},
-	extraReducers: builder => {
-		builder.addCase(getRepos.pending, (state, _) => {
+	extraReducers: (builder) => {
+		builder.addCase(HYDRATE, (state, action) => {
+			return {
+				...state,
+				...action.payload.repos,
+			}
+		}).addCase(getRepos.pending, (state, _) => {
 			state.loading = true
 		}).addCase(getRepos.rejected, (state, action) => {
 			state.error = action.error
 		}).addCase(getRepos.fulfilled, (state, action) => {
 			state.loading = false
+
 			// Don't use window.history.pushState() here in production
-            // It's better to keep redirections predictable
-            window.history.pushState({
-					page: state.page,
-					proPage: state.proPage,
-					order: state.order,
-					sort: state.sort,
-					search: state.search,
-				}, 
-				"Trending Github Repositories", 
+			// It's better to keep redirections predictable
+			window.history.pushState({
+				page: state.page,
+				proPage: state.proPage,
+				order: state.order,
+				sort: state.sort,
+				search: state.search,
+			},
+				"Trending Github Repositories",
 				`?q=${state.search}&order=${state.order}&sort=${state.sort}&proPage=${state.proPage}&page=${state.page}`
 			)
 			state.result = action.payload
 		})
-	}
+
+	},
 })
 
-export const { 
-	setRepos, 
-	setPage, 
-	setPrePage, 
+export const {
+	setRepos,
+	setPage,
+	setPrePage,
 	setlanguage,
 	setStared,
 	setShowStared,
@@ -126,18 +138,12 @@ export const selectStared = (state: RootState) => state.repos.stared
 
 export const selectShowStared = (state: RootState) => state.repos.showStared
 
-export const setReposAsync = (repos: RepoPage): AppThunk => dispatch => {
-	setTimeout(() => {
-		dispatch(setRepos(repos))
-	})
-}
-
-export const setQueryParamsAsync = (query: QueryParams): AppThunk => dispatch => {
-	setTimeout(() => {
-		dispatch(setPage((query.page as string)))
-		dispatch(setPrePage((query.proPage as string)))
-		dispatch(setlanguage((query.q as string).substr(29, (query.q as string).length)))
-	})
+export const setQueryParamsAsync = (query: QueryParams): AppThunk => async dispatch => {
+	dispatch(setPage((query.page as string)))
+	dispatch(setPrePage((query.proPage as string)))
+	dispatch(setlanguage((query.q as string).substr(29, (query.q as string).length)))
+	const result = await RepositoriesService.getAllRepos(query)
+	dispatch(setRepos(result))
 }
 
 export const loadRepositoriesPage =
@@ -152,7 +158,7 @@ export const loadRepositoriesPage =
 				page: repos.page,
 				proPage: repos.proPage,
 			}
-			
+
 			dispatch(getRepos(query))
 		}
 
@@ -163,7 +169,7 @@ export const changePerPage =
 			dispatch(setPrePage(perPage))
 			dispatch(setPage('1'))
 			const repos = selectState(getState())
-			
+
 			const query: QueryParams = {
 				q: repos.search,
 				order: repos.order,
@@ -171,7 +177,7 @@ export const changePerPage =
 				page: repos.page,
 				proPage: repos.proPage,
 			}
-			
+
 			dispatch(getRepos(query))
 		}
 
@@ -179,8 +185,9 @@ export const filterRepositoriesByLanguage =
 	(language: string): AppThunk =>
 		(dispatch, getState) => {
 			dispatch(setlanguage(language))
+			dispatch(setPage('1'))
 			const repos = selectState(getState())
-			
+
 			const query: QueryParams = {
 				q: repos.search,
 				order: repos.order,
@@ -188,9 +195,8 @@ export const filterRepositoriesByLanguage =
 				page: repos.page,
 				proPage: repos.proPage,
 			}
-			
+
 			dispatch(getRepos(query))
 		}
-
 
 export default repositoriesSlice.reducer

@@ -1,18 +1,17 @@
 
 import React from 'react'
 import { AppProps } from 'next/app'
-import { Provider } from 'react-redux'
-import { store } from '../store'
-import '../index.css'
+// import { Provider } from 'react-redux'
+// import { store } from '../store'
+import { wrapper } from '../store'
+import './index.css'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return (
-    <React.StrictMode>
-      <Provider store={store}>
-        <Component {...pageProps} />
-      </Provider>
-    </React.StrictMode>
-  )
+	return (
+		<React.StrictMode>
+			<Component {...pageProps} />
+		</React.StrictMode>
+	)
 }
 
-export default MyApp
+export default wrapper.withRedux(MyApp)

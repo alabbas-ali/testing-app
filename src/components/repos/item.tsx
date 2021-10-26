@@ -4,7 +4,7 @@ import { Repository } from '../../models/repo'
 import { selectStared, star, unstar } from '../../store/repositoriesSlice'
 import styles from './item.module.scss'
 
-function RepoItem(props: { repo: Repository}) {
+function RepoItem(props: { repo: Repository }) {
 
 	const staredRepo = useSelector(selectStared)
 
@@ -23,16 +23,16 @@ function RepoItem(props: { repo: Repository}) {
 	let button
 
 	staredRepo.map(s => {
-		if(s.id === props.repo.id) {
+		if (s.id === props.repo.id) {
 			found = true
-			return 
-		} 
+			return
+		}
 	})
 
 	if (found) {
-		button = <button className={styles.star} aria-label='star' onClick={()=> unstarRepo(props.repo)} > Unstar </button>
+		button = <button className={styles.star} aria-label='star' onClick={() => unstarRepo(props.repo)} > Unstar </button>
 	} else {
-		button = <button className={styles.unstar} aria-label='star' onClick={()=> starRepo(props.repo)} > Star </button>
+		button = <button className={styles.unstar} aria-label='star' onClick={() => starRepo(props.repo)} > Star </button>
 	}
 
 	return (
@@ -42,7 +42,7 @@ function RepoItem(props: { repo: Repository}) {
 					{props.repo.full_name} ({props.repo.language})
 				</h2>
 			</a>
-			{ button }
+			{button}
 			<p>{props.repo.description}</p>
 		</div>
 	)
