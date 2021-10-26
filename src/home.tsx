@@ -13,6 +13,7 @@ const ISSERVER = typeof window === "undefined"
 function Home() {
 	const dispatch = useDispatch()
 
+	// Similar to componentDidMount and componentDidUpdate:
 	useEffect(() => {
 		if(!ISSERVER) dispatch(setStared(JSON.parse(localStorage.getItem('stared')) || []))
 	})
