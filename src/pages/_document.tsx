@@ -8,7 +8,11 @@ export default class CustomDocument extends Document {
     render(): JSX.Element {
         return (
             <Html>
-                <Head></Head>
+                <Head>
+                    <meta name="description" content="discovering trending github repositories on GitHub" />
+                    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+                    <link rel="icon" href="/favicon.ico" />
+                </Head>
                 <body>
                     <Main />
                 </body>

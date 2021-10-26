@@ -17,7 +17,7 @@ import { wrapper } from '../store'
 import RepoFilters from '../components/repos/filters'
 import RepoListing from '../components/repos/listing'
 import Footer from '../components/footer/footer'
-import styles from './home.module.scss'
+import styles from './index.module.scss'
 
 
 const ISSERVER = typeof window === "undefined"
@@ -33,9 +33,6 @@ const IndexPage: NextPage = () => {
 	return (<>
 		<Head>
 			<title>Trending Github Repositories</title>
-			<meta name="description" content="discovering trending github repositories on GitHub" />
-			<meta name="viewport" content="initial-scale=1.0, width=device-width" />
-			<link rel="icon" href="/favicon.ico" />
 		</Head>
 		<div className={styles.container}>
 
