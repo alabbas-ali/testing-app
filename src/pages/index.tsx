@@ -50,15 +50,9 @@ export default IndexPage
 
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(
 	(store) => async (context) => {
-
-		const lastweek = moment().subtract(1, 'week').format('YYYY-MM-DD')
-
 		const query: QueryParams = {
-			q: context.query.q || `+created:>${lastweek}`,
-			sort: context.query.sort || 'stars',
-			order: context.query.order || 'desc',
-			proPage: context.query.proPage || 20,
-			page: context.query.page || 1,
+			query: context.query.query || '',
+			page: context.query.page || 0,
 		}
 
 		await store.dispatch(setQueryParamsAsync(query))

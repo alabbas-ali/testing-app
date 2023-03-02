@@ -5,9 +5,9 @@ import {
 } from '@reduxjs/toolkit'
 import { HYDRATE } from 'next-redux-wrapper'
 import moment from 'moment'
-import { Repository } from '../models/repo'
+import { Customer } from '../models/repo'
 import { RepoPage } from "../models/repo.page"
-import RepositoriesService, { QueryParams } from "../service/RepositoriesService"
+import CustomerService, { QueryParams } from "../service/RepositoriesService"
 import { AppThunk, RootState } from '.'
 
 export interface ReposState {
@@ -18,7 +18,7 @@ export interface ReposState {
 	sort: string
 	search: string
 	loading: boolean
-	stared: Array<Repository>
+	stared: Array<Customer>
 	error: any
 	showStared: boolean
 }
@@ -29,7 +29,7 @@ export const initialState: ReposState = {
 	proPage: '10',
 	order: 'desc',
 	sort: 'stars',
-	search: `created:>${moment().subtract(1, 'week').format('YYYY-MM-DD')}`,
+	search: ``,
 	loading: false,
 	stared: [],
 	error: null,
@@ -42,7 +42,7 @@ export const initialState: ReposState = {
 // code can then be executed and other actions can be dispatched. Thunks are
 // typically used to make async requests.
 export const getRepos = createAsyncThunk('repos/all', async (query: QueryParams) => {
-	return await RepositoriesService.getAllRepos(query)
+	return await CustomerService.getAllRepos(query)
 })
 
 const repositoriesSlice = createSlice({
@@ -60,21 +60,21 @@ const repositoriesSlice = createSlice({
 		},
 		setlanguage: (state: ReposState, action: PayloadAction<string>) => {
 			if (action.payload)
-				state.search = `created:>${moment().subtract(1, 'week').format('YYYY-MM-DD')}+language=${action.payload}`
+				state.search = ``
 			else
-				state.search = `created:>${moment().subtract(1, 'week').format('YYYY-MM-DD')}`
+				state.search = ``
 		},
 		setShowStared: (state: ReposState, action: PayloadAction<boolean>) => {
 			state.showStared = action.payload
 		},
-		setStared: (state: ReposState, action: PayloadAction<Array<Repository>>) => {
+		setStared: (state: ReposState, action: PayloadAction<Array<Customer>>) => {
 			state.stared = action.payload
 		},
-		star: (state: ReposState, action: PayloadAction<Repository>) => {
+		star: (state: ReposState, action: PayloadAction<Customer>) => {
 			state.stared.push(action.payload)
 			localStorage.setItem('stared', JSON.stringify(state.stared))
 		},
-		unstar: (state: ReposState, action: PayloadAction<Repository>) => {
+		unstar: (state: ReposState, action: PayloadAction<Customer>) => {
 			state.stared = state.stared.filter(repo => repo.id != action.payload.id)
 			localStorage.setItem('stared', JSON.stringify(state.stared))
 		},
@@ -140,9 +140,8 @@ export const selectShowStared = (state: RootState) => state.repos.showStared
 
 export const setQueryParamsAsync = (query: QueryParams): AppThunk => async dispatch => {
 	dispatch(setPage((query.page as string)))
-	dispatch(setPrePage((query.proPage as string)))
-	dispatch(setlanguage((query.q as string).substr(29, (query.q as string).length)))
-	const result = await RepositoriesService.getAllRepos(query)
+	dispatch(setlanguage((query.query as string)))
+	const result = await CustomerService.getAllRepos(query)
 	dispatch(setRepos(result))
 }
 
@@ -152,11 +151,8 @@ export const loadRepositoriesPage =
 			dispatch(setPage(page))
 			const repos = selectState(getState())
 			const query: QueryParams = {
-				q: repos.search,
-				order: repos.order,
-				sort: repos.sort,
+				query: repos.search,
 				page: repos.page,
-				proPage: repos.proPage,
 			}
 
 			dispatch(getRepos(query))
@@ -171,11 +167,8 @@ export const changePerPage =
 			const repos = selectState(getState())
 
 			const query: QueryParams = {
-				q: repos.search,
-				order: repos.order,
-				sort: repos.sort,
+				query: repos.search,
 				page: repos.page,
-				proPage: repos.proPage,
 			}
 
 			dispatch(getRepos(query))
@@ -189,11 +182,8 @@ export const filterRepositoriesByLanguage =
 			const repos = selectState(getState())
 
 			const query: QueryParams = {
-				q: repos.search,
-				order: repos.order,
-				sort: repos.sort,
+				query: repos.search,
 				page: repos.page,
-				proPage: repos.proPage,
 			}
 
 			dispatch(getRepos(query))

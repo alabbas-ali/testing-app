@@ -1,7 +1,10 @@
-import { Repository } from './repo'
+import { Customer } from './repo'
 
 export interface RepoPage {
-    total_count: number
-    incomplete_results: boolean
-    items: Array<Repository>
+    customers: Array<Customer>
+    pagination: {
+        page: number
+        per_page: number
+        total_pages: number
+    }
 }

@@ -1,4 +1,4 @@
-# Shop-Apotheke-App
+# testing-app
 
 This project is a Frontend / Backend Code Challange. The project is to implement a small client application for discovering trending repositories on GitHub.
 A list of the most popular repositories of the last week should be displayed and the user should be able to star them. The starred repositories should be visible either through a filter or in a diferent tab. Some basic info about the repo should be displayed, such as: repo name, link to GitHub, description and number of stars. 

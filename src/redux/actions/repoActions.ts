@@ -1,4 +1,4 @@
-import RepositoriesService from '../../service/RepositoriesService'
+import CustomerService from '../../service/RepositoriesService'
 import {
     CLEAR_ERROR,
     REOPS_LOAD_FAIL,
@@ -8,7 +8,7 @@ import {
 // Get all Repos
 export const getRepos = (query) => async (dispatch) => {
     try {
-        const data = await RepositoriesService.getAllRepos(query)
+        const data = await CustomerService.getAllRepos(query)
 
         dispatch({
             type: REOPS_LOAD_SUCCESS,

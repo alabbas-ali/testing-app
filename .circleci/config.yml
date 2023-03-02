@@ -1,7 +1,7 @@
 version: 2
 
 defaults: &defaults
-    working_directory: ~/shop-apotheke-app
+    working_directory: ~/testing-app
     docker:
         - image: circleci/node:13-browsers
 
@@ -36,7 +36,7 @@ jobs:
                 name: Save repository
                 root: "~"
                 paths:
-                  - shop-apotheke-app
+                  - testing-app
 
     npm_install:
         <<: *defaults
@@ -57,7 +57,7 @@ jobs:
                 name: Save dependencies
                 root: "~"
                 paths:
-                    - shop-apotheke-app/node_modules
+                    - testing-app/node_modules
                     - .ssh
 
     lint:
@@ -86,7 +86,7 @@ jobs:
                 name: Save test coverage
                 root: "~"
                 paths:
-                    - shop-apotheke-app/coverage
+                    - testing-app/coverage
     build:
         <<: *defaults
         steps:

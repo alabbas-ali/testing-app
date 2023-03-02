@@ -25,32 +25,15 @@ import { RepoPage } from '../../models/repo.page'
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
-	const { q, sort, order, proPage, page } = req.query
+	const { query, page } = req.query
 
-	let url = "https://api.github.com/search/repositories?"
-	if (q) url += `q=${q}`
-	if (sort) url += `&sort=${sort}`
-	if (order) url += `&order=${order}`
-	if (proPage) url += `&per_page=${proPage}`
+	let url = query && query !== '' ? `https://thawing-plains-90222.herokuapp.com/customers/search?query=${q}` 
+	: "https://thawing-plains-90222.herokuapp.com/customers?"
+
 	if (page) url += `&page=${page}`
 
 	const response = await fetch(url)
 	const data = await response.json()
-	const remapedData: RepoPage = {
-		total_count: data.total_count,
-		incomplete_results: data.incomplete_results,
-		items: data.items.map(it => {
-			return {
-				id: it.id,
-				node_id: it.node_id,
-				name: it.name,
-				full_name: it.full_name,
-				private: it.private,
-				html_url: it.html_url,
-				description: it.description,
-				language: it.language,
-			}
-		})
-	}
-	res.status(200).json(remapedData)
+
+	res.status(200).json(data)
 }
